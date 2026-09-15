@@ -33,26 +33,33 @@ async function askGemini(previousMessages: ChatMessage[], message: string) {
   );
   url.searchParams.set("key", GEMINI_API_KEY!);
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [
-        ...previousMessages.map((item) => ({
-          role: item.role === "assistant" ? "model" : "user",
-          parts: [{ text: item.content }],
-        })),
-        { role: "user", parts: [{ text: message.trim().slice(0, 4000) }] },
-      ],
-      generationConfig: { temperature: 0.45, maxOutputTokens: 220 },
-    }),
-    signal: AbortSignal.timeout(60_000),
-  });
+  const requestBody = {
+    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    contents: [
+      ...previousMessages.map((item) => ({
+        role: item.role === "assistant" ? "model" : "user",
+        parts: [{ text: item.content }],
+      })),
+      { role: "user", parts: [{ text: message.trim().slice(0, 4000) }] },
+    ],
+    generationConfig: { temperature: 0.45, maxOutputTokens: 220 },
+  };
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Gemini request failed (${response.status}): ${errorText}`);
+  let response: Response | undefined;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+      signal: AbortSignal.timeout(60_000),
+    });
+    if (response.status !== 503 || attempt === 2) break;
+    await new Promise((resolve) => setTimeout(resolve, 700 * (attempt + 1)));
+  }
+
+  if (!response || !response.ok) {
+    const errorText = response ? await response.text() : "No response from Gemini.";
+    throw new Error(`Gemini request failed (${response?.status ?? "network"}): ${errorText}`);
   }
 
   const body = (await response.json()) as {
