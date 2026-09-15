@@ -31,7 +31,7 @@ Then set:
 
 ```bash
 GEMINI_API_KEY=your_key_here
-GEMINI_MODEL=gemini-2.0-flash
+GEMINI_MODEL=gemini-3.6-flash
 ```
 
 Create your own key at https://aistudio.google.com/app/apikey. Never commit the key to GitHub; add it only as a Render environment variable.
