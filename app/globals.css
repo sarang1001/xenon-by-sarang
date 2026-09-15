@@ -29,36 +29,33 @@ body {
   position: fixed;
   left: 50%;
   top: 48%;
-  width: min(58vw, 280px);
-  height: min(58vw, 280px);
+  width: min(64vw, 300px);
+  height: min(64vw, 300px);
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.3) 12%, rgba(35, 35, 35, 0.92) 22%, rgba(0, 0, 0, 0.98) 52%, rgba(0, 0, 0, 1) 100%);
+    radial-gradient(circle at 38% 30%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.18) 14%, transparent 28%),
+    radial-gradient(circle at 50% 50%, #2d2d2d 0%, #080808 48%, #000 72%);
   box-shadow:
-    0 0 30px rgba(255, 255, 255, 0.25),
-    0 0 80px rgba(255, 255, 255, 0.14),
-    inset -18px -20px 35px rgba(0, 0, 0, 0.9),
-    inset 18px 18px 30px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.42);
+    0 0 18px rgba(255, 255, 255, 0.5),
+    0 0 55px rgba(255, 255, 255, 0.24),
+    inset -28px -24px 42px rgba(0, 0, 0, 0.95),
+    inset 18px 14px 28px rgba(255, 255, 255, 0.14);
+  border: 2px solid rgba(255, 255, 255, 0.65);
   opacity: 0;
   z-index: 1;
   pointer-events: none;
   transition: opacity 0.25s ease;
 }
 
-.phone-orb::before,
-.phone-orb::after {
+.phone-orb::before {
   content: "";
   position: absolute;
-  inset: 10%;
+  inset: -7%;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.phone-orb::after {
-  inset: -12%;
-  border-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.2);
+  animation: orbHalo 4s ease-in-out infinite;
 }
 
 /* Film grain overlay */
@@ -326,6 +323,9 @@ body {
 .voice-console__hint { margin-top: 10px; font-size: 9px; letter-spacing: 0.08em; opacity: 0.55; }
 
 @keyframes xenonPulse { 50% { opacity: 0.35; transform: scale(0.75); } }
+@keyframes orbHalo {
+  50% { transform: scale(1.035); opacity: 0.55; }
+}
 
 /* ——— Camera preview panel ——— */
 .camera-panel {
